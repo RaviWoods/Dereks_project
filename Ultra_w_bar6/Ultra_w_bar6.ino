@@ -76,6 +76,7 @@ int ballnumFunc (int pN, int bN)
       lcd.setCursor(0,1);
       lcd.print("Total:");
       lcd.print(totals[j]);
+      
       delay(5000);
     }
   }
@@ -84,9 +85,10 @@ int ballnumFunc (int pN, int bN)
 int ballFunc()
 {
   int x, y;
+  int l = 0;
   do
   {
-    x = distanceMeasure(3);
+    x = distanceMeasure(3, l);
   } while (x > 2* startGap+10*ballGap+8 ||  x == 0);
   y = pointFunc(x);
   return(y);
@@ -126,17 +128,18 @@ int readNo (int max)
   return (Num);
 }
 
-long distanceMeasure(int k)
+long distanceMeasure(int k, int& l)
 {
   long i, j;
   digitalWrite(trigPin, LOW);  
   delayMicroseconds(2); 
   digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10); 
+  delayMicroseconds(3); 
   digitalWrite(trigPin, LOW);
   i = pulseIn(echoPin, HIGH);
   j = ((i/2) / soundConstant);
   delay(k); 
+  l++;
   return j;
 }
 
