@@ -31,6 +31,8 @@ void loop(){
   lcd.clear();
    lcd.setCursor(0, 0);
    lcd.print(Distance);
-
+  delay(100);
+  lcd.clear();
+  delay(10);
   }
 

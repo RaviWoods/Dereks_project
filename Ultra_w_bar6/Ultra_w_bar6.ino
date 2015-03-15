@@ -1,13 +1,12 @@
-
+ 
 #define trigPin 8
 #define echoPin 9
 #define led 13
 #define soundConstant 28.72
 #define startGap 11
 #define ballGap 6
-#define upPin 10
-#define downPin 11
-#define enterPin 12
+#define upPin 0
+#define enterPin 1
 #include <LiquidCrystal.h>
 int cmd, ballNo;
 //long usedDistance;
@@ -19,7 +18,6 @@ void setup()
 { 
   Serial.begin(9600);
   pinMode(upPin, INPUT_PULLUP);
-  pinMode(downPin, INPUT_PULLUP);
   pinMode(enterPin, INPUT_PULLUP);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
@@ -64,8 +62,15 @@ int ballnumFunc (int pN, int bN)
       lcd.setCursor(0,1);
       lcd.print("Ball #");
       lcd.print(i);
-      delay(5000);
       lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("3...");
+      delay(1000);
+      lcd.print("2...");
+      delay(1000);
+      lcd.print("1...");
+      delay(1000);
+      lcd.setCursor(0,1   );
       lcd.print("GO!");
       int c = ballFunc();
       totals[j] = totals[j] + c;
@@ -85,10 +90,10 @@ int ballnumFunc (int pN, int bN)
 int ballFunc()
 {
   int x, y;
-  int l = 0;
+  //int l = 0;
   do
   {
-    x = distanceMeasure(3, l);
+    x = distanceMeasure(3);
   } while (x > 2* startGap+10*ballGap+8 ||  x == 0);
   y = pointFunc(x);
   return(y);
@@ -97,6 +102,8 @@ int ballFunc()
 int readNo (int max)
 { 
   int Num = 1;
+  lcd.setCursor(0, 1);
+  lcd.print(Num);
   int upbuttonState = HIGH;
   int downbuttonState = HIGH;
   int lNum = Num;
@@ -105,17 +112,19 @@ int readNo (int max)
   {
     enterpinState = digitalRead(enterPin);
     upbuttonState = digitalRead(upPin);
-    downbuttonState = digitalRead(downPin);
+    //downbuttonState = digitalRead(downPin);
     if(digitalRead(upPin) == LOW) 
     {
       //Serial.println("UP");
       Num = buttonFn(Num, 1);
     }
+     /*
     if(digitalRead(downPin) == LOW) 
     {
       //Serial.println("DOWN");
       Num = buttonFn(Num, -1);
     }
+    */
     if (Num == (max+1)) Num = 1;
     if (Num == 0) Num = max;
     if(lNum != Num)
@@ -128,18 +137,17 @@ int readNo (int max)
   return (Num);
 }
 
-long distanceMeasure(int k, int& l)
+long distanceMeasure(int k)
 {
   long i, j;
   digitalWrite(trigPin, LOW);  
   delayMicroseconds(2); 
   digitalWrite(trigPin, HIGH);
-  delayMicroseconds(3); 
+  delayMicroseconds(5); 
   digitalWrite(trigPin, LOW);
   i = pulseIn(echoPin, HIGH);
   j = ((i/2) / soundConstant);
-  delay(k); 
-  l++;
+  //delay(k); 
   return j;
 }
 
