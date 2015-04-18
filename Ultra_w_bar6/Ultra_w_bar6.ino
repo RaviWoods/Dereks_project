@@ -4,7 +4,6 @@
 #define led 13
 #define soundConstant 28.72
 #define distanceConstant 140
-#define maxVelocity 100
 #define startGap 11
 #define ballGap 6
 #define upPin 0
@@ -92,19 +91,11 @@ int ballnumFunc (int pN, int bN)
 int ballFunc()
 {
   int x, z;
-  unsigned long a, b, vel;
   do
   {
     x = distanceMeasure1(3);
   } while (x > 2* startGap+10*ballGap+8 ||  x == 0);
-  a = millis();
-  do
-  {
-    y = distanceMeasure2(3);
-  } while (y > 2* startGap+10*ballGap+8 ||  x == 0);
-  b = millis();
-  vel = distanceConstant/(b-a);
-  z = pointFunc(x, vel);
+  z = pointFunc(x);
   return(z);
 }
         
@@ -150,38 +141,20 @@ long distanceMeasure1(int k)
 {
   long i, j;
   digitalWrite(trigPin1, LOW);  
-  delayMicroseconds(2); 
-  digitalWrite(trigPin1, HIGH);
   delayMicroseconds(5); 
+  digitalWrite(trigPin1, HIGH);
+  delayMicroseconds(10); 
   digitalWrite(trigPin1, LOW);
+  delayMicroseconds(5); 
   i = pulseIn(echoPin1, HIGH);
   j = ((i/2) / soundConstant);
-  //delay(k); 
   return j;
 }
 
-long distanceMeasure2(int k)
-{
-  long i, j;
-  digitalWrite(trigPin2, LOW);  
-  delayMicroseconds(2); 
-  digitalWrite(trigPin2, HIGH);
-  delayMicroseconds(5); 
-  digitalWrite(trigPin2, LOW);
-  i = pulseIn(echoPin2, HIGH);
-  j = ((i/2) / soundConstant);
-  //delay(k); 
-  return j;
-}
-
-int pointFunc(int n, unsigned long vel)
+int pointFunc(int n)
 {
   int m;
-  if (vel > maxVelocity) 
-  {
-    m = 0; 
-  }
-  else if ((startGap <= n && n <= startGap+ballGap)||(startGap+9*ballGap+8 <= n && n <= startGap+10*ballGap+8)) 
+  if ((startGap <= n && n <= startGap+ballGap)||(startGap+9*ballGap+8 <= n && n <= startGap+10*ballGap+8)) 
   {    
     m = 2;
   } 

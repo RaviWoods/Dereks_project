@@ -1,13 +1,9 @@
  
 #define trigPin1 8
 #define echoPin1 9
-#define trigPin2 10
-#define echoPin2 11
 #define led 13
 #define soundConstant 28.72
 #define distanceConstant 140
-#define UpperVel 35
-#define LowerVel 7
 #define startGap 11
 #define ballGap 6
 #define upPin 0
@@ -54,7 +50,7 @@ int ballnumFunc (int pN, int bN)
   int totals[pN];
   for (int j = 0; j < pN; j++)
   {
-    totals[j] = 0;
+    totals[j ] = 0;
   }
   for(int i = 1; i <= bN; i++)
   {
@@ -67,7 +63,6 @@ int ballnumFunc (int pN, int bN)
       lcd.setCursor(0,1);
       lcd.print("Ball #");
       lcd.print(i);
-      delay(1000);
       lcd.clear();
       lcd.setCursor(0,0);
       lcd.print("3...");
@@ -78,15 +73,8 @@ int ballnumFunc (int pN, int bN)
       delay(1000);
       lcd.setCursor(0,1   );
       lcd.print("GO!");
-      int vel = 0;
-      int c = ballFunc(vel);
+      int c = ballFunc();
       totals[j] = totals[j] + c;
-      if (vel < UpperVel && vel > LowerVel) 
-      {
-         lcd.clear();
-         lcd.print("Slow Down!");
-         delay(1000);
-      }
       lcd.clear();
       lcd.setCursor(0, 0);
       lcd.print("Score:");
@@ -94,76 +82,24 @@ int ballnumFunc (int pN, int bN)
       lcd.setCursor(0,1);
       lcd.print("Total:");
       lcd.print(totals[j]);
+      
       delay(5000);
     }
   }
-  for (int j = 0; j < pN; j++)
-  {
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Player #");
-    lcd.print(j+1);
-    lcd.setCursor(0,1);
-    lcd.print("Total:");
-    lcd.print(totals[j]);
-    delay(1000);
-  }
-  int maximum = 0;
-  for (int j = 0; j < pN; j++)
-  {
-     if(totals[j] >= maximum) {
-        maximum = totals[j]; 
-     }
-  }
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("The Winner is...");
-  lcd.setCursor(0, 1);
-  lcd.print("Player");
-  int winning[pN];
-  int a;
-  for (int j = 0; j < pN; j++)
-  {
-     a = 0;
-     if(totals[j] == maximum) {
-         winning[j] = j;
-         a++;
-     }
-  }
-  if(a >= 2) {
-    lcd.print("s");
-  }  
-  for (int i = 0; i < a; i++)
-  {
-    lcd.print(" ");
-    lcd.print(winning[i]);
-    if(a >= 2) {
-      lcd.print(" &");
-    }
-  } 
-  delay(6000);  
 }
 
-int ballFunc(int& vel)
+int ballFunc()
 {
-  long x, y;
+  long x;
   int z;
-  unsigned long a, b;
   do
   {
     x = distanceMeasure1(3);
-  } while (x > 2* startGap+10*ballGap+8||  x == 0);
-  /*
-  do 
-  {
-    y = distanceMeasure1(3);
-    vel++;
-  } while (y < 2* startGap+10*ballGap+8|| y == 0);
-  */
-  z = pointFunc(x, vel);
+  } while (x > 2* startGap+10*ballGap+8 ||  x == 0);
+  z = pointFunc(x);
   return(z);
 }
-
+        
 int readNo (int max)
 { 
   int Num = 1;
@@ -206,24 +142,20 @@ long distanceMeasure1(int k)
 {
   long i, j;
   digitalWrite(trigPin1, LOW);  
-  delayMicroseconds(2); 
-  digitalWrite(trigPin1, HIGH);
   delayMicroseconds(5); 
+  digitalWrite(trigPin1, HIGH);
+  delayMicroseconds(10); 
   digitalWrite(trigPin1, LOW);
+  delayMicroseconds(5); 
   i = pulseIn(echoPin1, HIGH);
   j = ((i/2) / soundConstant);
-  //delay(k); 
   return j;
 }
 
-int pointFunc(int n, int vel)
+int pointFunc(int n)
 {
   int m;
-  if (vel < UpperVel && vel > LowerVel) 
-  {
-    m = 0; 
-  }
-  else if ((startGap <= n && n <= startGap+ballGap)||(startGap+9*ballGap+8 <= n && n <= startGap+10*ballGap+8)) 
+  if ((startGap <= n && n <= startGap+ballGap)||(startGap+9*ballGap+8 <= n && n <= startGap+10*ballGap+8)) 
   {    
     m = 2;
   } 
