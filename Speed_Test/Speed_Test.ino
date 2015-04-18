@@ -1,9 +1,8 @@
  
 #define trigPin1 8
 #define echoPin1 9
-#define trigPin2 10
-#define echoPin2 11
-#define led 13
+#define trigPin2 11
+#define echoPin2 12
 #define soundConstant 28.72
 #define distanceConstant 140
 #define maxVelocity 100
@@ -25,7 +24,8 @@ void setup()
   pinMode(enterPin, INPUT_PULLUP);
   pinMode(trigPin1, OUTPUT);
   pinMode(echoPin1, INPUT);
-  pinMode(led, OUTPUT);
+  pinMode(trigPin2, OUTPUT);
+  pinMode(echoPin2, INPUT);
   lcd.begin(16, 2);
   lcd.setCursor(0, 0);
   lcd.print("How many balls?");
@@ -63,15 +63,13 @@ int ballFunc(unsigned long& vel)
   unsigned long a, b;
   do
   {
-    x = distanceMeasure1(3);
-  } while (x > 2* startGap+10*ballGap+8 ||  x == 0);
-  a = millis();
-  do
-  {
     y = distanceMeasure2(3);
-  } while (y > 2* startGap+10*ballGap+8 ||  x == 0);
-  b = millis();
-  vel = distanceConstant/(b-a);
+    lcd.setCursor(0, 1);
+    lcd.print(y);
+    delay(1000);
+  } while (y > 2* startGap+10*ballGap+8||  y == 0);
+  b = micros();
+  vel = y;
   z = pointFunc(x, vel);
   return(z);
 }
