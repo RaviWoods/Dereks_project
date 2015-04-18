@@ -1,6 +1,8 @@
  
 #define trigPin1 8
 #define echoPin1 9
+#define trigPin2 10
+#define echoPin2 11
 #define led 13
 #define soundConstant 28.72
 #define distanceConstant 140
@@ -32,15 +34,8 @@ void setup()
 void loop()
 {
   lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("# of players?");
-  delay(500);
-  int playerNo = readNo(4);
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("# of balls?");
-  delay(500);
-  int ballNo = readNo(5);
+  int playerNo = 1;
+  int ballNo = 1;
   ballnumFunc(playerNo, ballNo);
 }
 
@@ -48,51 +43,24 @@ void loop()
 int ballnumFunc (int pN, int bN)
 {
   lcd.clear();
-  int totals[pN];
-  for (int j = 0; j < pN; j++)
-  {
-    totals[j ] = 0;
-  }
-  for(int i = 1; i <= bN; i++)
-  {
-    for (int j = 0; j < pN; j++)
-    {
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("Player #");
-      lcd.print(j+1);
-      lcd.setCursor(0,1);
-      lcd.print("Ball #");
-      lcd.print(i);
-      lcd.clear();
-      lcd.setCursor(0,0);
-      lcd.print("3...");
-      delay(1000);
-      lcd.print("2...");
-      delay(1000);
-      lcd.print("1...");
-      delay(1000);
-      lcd.setCursor(0,1   );
-      lcd.print("GO!");
-      int c = ballFunc();
-      totals[j] = totals[j] + c;
-      lcd.clear();
-      lcd.setCursor(0, 0);
-      lcd.print("Score:");
-      lcd.print(c);
-      lcd.setCursor(0,1);
-      lcd.print("Total:");
-      lcd.print(totals[j]);
-      
-      delay(5000);
-    }
-  }
+  lcd.setCursor(0, 0);
+  lcd.print("GO!");
+  unsigned long vel;
+  int c = ballFunc(vel);
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Score:");
+  lcd.print(c);
+  lcd.setCursor(0,1);
+  lcd.print("Speed:");
+  lcd.print(vel);
+  delay(3000);
 }
 
-int ballFunc()
+int ballFunc(unsigned long& vel)
 {
-  int x, z;
-  unsigned long a, b, vel;
+  int x, y, z;
+  unsigned long a, b;
   do
   {
     x = distanceMeasure1(3);
@@ -177,11 +145,7 @@ long distanceMeasure2(int k)
 int pointFunc(int n, unsigned long vel)
 {
   int m;
-  if (vel > maxVelocity) 
-  {
-    m = 0; 
-  }
-  else if ((startGap <= n && n <= startGap+ballGap)||(startGap+9*ballGap+8 <= n && n <= startGap+10*ballGap+8)) 
+  if ((startGap <= n && n <= startGap+ballGap)||(startGap+9*ballGap+8 <= n && n <= startGap+10*ballGap+8)) 
   {    
     m = 2;
   } 

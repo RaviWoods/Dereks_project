@@ -1,6 +1,8 @@
  
 #define trigPin1 8
 #define echoPin1 9
+#define trigPin2 10
+#define echoPin2 11
 #define led 13
 #define soundConstant 28.72
 #define distanceConstant 140
@@ -91,7 +93,7 @@ int ballnumFunc (int pN, int bN)
 
 int ballFunc()
 {
-  int x, z;
+  int x, y, z;
   unsigned long a, b, vel;
   do
   {
