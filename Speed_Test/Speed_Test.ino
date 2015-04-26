@@ -45,32 +45,34 @@ int ballnumFunc (int pN, int bN)
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("GO!");
-  unsigned long vel;
-  int c = ballFunc(vel);
+  unsigned long y;
+  int c = ballFunc(y);
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Score:");
   lcd.print(c);
   lcd.setCursor(0,1);
   lcd.print("Speed:");
-  lcd.print(vel);
+  lcd.print(y);
   delay(3000);
 }
 
-int ballFunc(unsigned long& vel)
+int ballFunc(unsigned long& y)
 {
-  int x, y, z;
+  long x;
+  int z;
+  y = 0;
   unsigned long a, b;
   do
   {
-    y = distanceMeasure2(3);
-    lcd.setCursor(0, 1);
-    lcd.print(y);
-    delay(1000);
-  } while (y > 2* startGap+10*ballGap+8||  y == 0);
-  b = micros();
-  vel = y;
-  z = pointFunc(x, vel);
+    x = distanceMeasure1(3);
+  } while (x > 2* startGap+10*ballGap+8||  x == 0);
+  do 
+  {
+    x = distanceMeasure1(3);
+    y++;
+  } while (x < 2* startGap+10*ballGap+8||  x == 0);
+  z = pointFunc(x, y);
   return(z);
 }
         
@@ -140,7 +142,7 @@ long distanceMeasure2(int k)
   return j;
 }
 
-int pointFunc(int n, unsigned long vel)
+int pointFunc(int n, unsigned long y)
 {
   int m;
   if ((startGap <= n && n <= startGap+ballGap)||(startGap+9*ballGap+8 <= n && n <= startGap+10*ballGap+8)) 
